@@ -1,12 +1,31 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { FiMenu } from "react-icons/fi";
 import { IoMdClose } from "react-icons/io";
+import axios from "axios";
+import { API_URL } from "../apiUrl.js";
 import { Card } from "./Card";
+import { Link } from "react-router-dom";
 
 const Sidebar = ({ isOpen, setIsOpen }) => {
+  const [userHistory, setUserHistory] = useState([]);
+
   const toggleSidebar = () => {
     setIsOpen(!isOpen);
   };
+
+  useEffect(() => {
+    const getUserHistory = async () => {
+      try {
+        const response = await axios.get(`${API_URL}/users/history`);
+        // console.log(response.data.data);
+        setUserHistory(response.data.data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    getUserHistory();
+  }, []);
 
   return (
     <div className="flex fixed top-0 left-0 bottom-0 h-full z-50">
@@ -25,7 +44,7 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
         } md:translate-x-0 transform transition-transform duration-300 ease-in-out`}
       >
         {/* Top Section */}
-          <Card color={"#FFFFF"}>History</Card>
+        <Card color={"#FFFFF"}>History</Card>
 
         {/* Middle Section */}
         <div
@@ -35,24 +54,25 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
           <ul className="space-y-2">
             {/* Replace with dynamic content */}
             {/* Add with NavLink */}
-            <li className="bg-gray-800 text-gray-200 shadow rounded p-2">
-              Sidebar Item 1
-            </li>
-            <li className="bg-gray-800 text-gray-200 shadow rounded p-2">
-              Sidebar Item 2
-            </li>
-            <li className="bg-gray-800 text-gray-200 shadow rounded p-2">
-              Sidebar Item 3
-            </li>
-            <li className="bg-gray-800 text-gray-200 shadow rounded p-2">
-              Sidebar Item 4
-            </li>
+            {userHistory.map((history) => (
+              <Link
+                to={`/setups/${history.history.setup._id}`}
+                key={history.history._id}
+              >
+                <li
+                  key={history.history._id}
+                  className="bg-gray-800 text-gray-200 shadow rounded p-2 mb-2 cursor-pointer hover:bg-gray-700 transition-all duration-300 ease-in-out"
+                >
+                  {history.history.setup.setup.slice(0, 25)}...
+                </li>
+              </Link>
+            ))}
           </ul>
         </div>
 
         {/* Bottom Section */}
         <div className="flex flex-col gap-4">
-        <button className="text-gray-400 flex items-center gap-2 hover:text-white text-left cursor-pointer">
+          <button className="text-gray-400 flex items-center gap-2 hover:text-white text-left cursor-pointer">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"

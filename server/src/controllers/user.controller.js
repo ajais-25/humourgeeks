@@ -17,6 +17,34 @@ const getUserHistory = async (req, res) => {
                 localField: "history",
                 foreignField: "_id",
                 as: "history",
+                pipeline: [
+                    {
+                        $lookup: {
+                            from: "setups",
+                            localField: "setupId",
+                            foreignField: "_id",
+                            as: "setup",
+                            pipeline: [
+                                {
+                                    $project: {
+                                        _id: 1,
+                                        setup: 1,
+                                    },
+                                },
+                            ],
+                        },
+                    },
+                    {
+                        $unwind: "$setup",
+                    },
+                    {
+                        $project: {
+                            _id: 1,
+                            setup: 1,
+                            createdAt: 1,
+                        },
+                    },
+                ],
             },
         },
         {
@@ -25,7 +53,15 @@ const getUserHistory = async (req, res) => {
                 history: 1,
             },
         },
-    ]);
+        {
+            $unwind: "$history",
+        },
+        {
+            $sort: {
+                "history.createdAt": -1,
+            },
+        },
+    ]).limit(5);
 
     return res
         .status(200)

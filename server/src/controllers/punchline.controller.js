@@ -43,6 +43,8 @@ const addPunch = async (req, res) => {
     // console.log(req.auth.userId);
     const userId = await User.findOne({ clerkId: req.auth?.userId });
 
+    const user = await User.findById(userId);
+
     const isSolved = await Punchline.findOne({
         setupId,
         user: userId,
@@ -51,6 +53,10 @@ const addPunch = async (req, res) => {
     if (isSolved) {
         isSolved.punches.push({ punchline, humorRating });
         await isSolved.save({ validateBeforeSave: false });
+
+        user.history.pull(isSolved._id);
+        user.history.push(isSolved._id);
+        await user.save({ validateBeforeSave: false });
 
         return res
             .status(200)
@@ -62,6 +68,10 @@ const addPunch = async (req, res) => {
         user: userId,
         punches: [{ punchline, humorRating }],
     });
+
+    user.history.push(punch._id);
+    user.solved.push(setupId);
+    await user.save({ validateBeforeSave: false });
 
     return res.status(200).json(new ApiResponse(200, punch, "Punchline added"));
 };
