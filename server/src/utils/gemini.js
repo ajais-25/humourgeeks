@@ -98,12 +98,12 @@ export async function getAIResponse(setup, punchline) {
     const prompt = `
         Analyze the following joke and return a JSON response with these exact fields:
         {
-            "Pun": (integer from 0 to 10),
-            "Dark": (integer from 0 to 10),
-            "Sarcasm": (integer from 0 to 10),
-            "Wholesome": (integer from 0 to 10),
-            "Wordplay": (integer from 0 to 10),
-            "Overall_Rating": (integer from 0 to 10)
+            "Pun": (integer from 0 to 85),
+            "Dark": (integer from 0 to 85),
+            "Sarcasm": (integer from 0 to 85),
+            "Wholesome": (integer from 0 to 85),
+            "Wordplay": (integer from 0 to 85),
+            "Overall_Rating": (integer from 0 to 85)
         }
 
         ### Important Rules:
