@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { FaSearch } from "react-icons/fa";
 import axios from "axios";
 import { API_URL } from "../apiUrl";
+import TitleEmoji from "../components/TitleEmoji";
 import { Link } from "react-router-dom";
 
 const SetupList = () => {
@@ -66,10 +67,10 @@ const SetupList = () => {
 
   return (
     <div className="bg-yellow-400 w-full min-h-screen flex flex-col justify-center items-center md:pl-72 pl-8 p-10 px-12 overflow-hidden">
-      <h1 className="text-3xl font-bold text-black mb-4 flex items-center">
-        Humour<span className="text-pink-600">😆</span>geeks
-      </h1>
-      <div className="bg-white p-4 rounded-lg shadow-lg w-full max-w-4xl">
+      <div className="w-full text-center text-4xl font-extrabold cursor-default">
+        <TitleEmoji />
+      </div>
+      <div className="bg-white p-4 rounded-lg mt-8 shadow-lg w-full max-w-4xl">
         <div className="flex flex-col sm:flex-row sm:justify-between mb-4">
           <div className="relative w-full sm:w-1/2">
             <FaSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
@@ -164,10 +165,6 @@ const SetupList = () => {
           </button>
         </div>
       </div>
-      <footer className="text-center mt-4 text-black font-semibold">
-        HumourGeeks is the first AI-powered comedy practicing platform in the
-        world!
-      </footer>
     </div>
   );
 };

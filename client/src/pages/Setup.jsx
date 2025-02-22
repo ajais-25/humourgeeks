@@ -112,14 +112,14 @@ const Setup = () => {
               {setup?.setup}
             </div>
           </div>
-          <div className="relative h-[30%] px-2 w-full bg-white border-1 rounded-2xl">
-            <span className="h-[20%] flex items-center text-lg font-bold">
+          <div className="relative h-[30%] w-full bg-white border-1 rounded-2xl">
+            <span className="h-[20%] px-2 flex items-center text-lg font-bold">
               Write your punchline
             </span>
             <textarea
               value={punchline}
               onChange={(e) => setPunchline(e.target.value)}
-              className="w-full h-[80%] outline-none text-sm font-medium text-gray-800"
+              className="w-full h-[80%] border-t-1 px-2 mt-1 outline-none text-sm font-medium text-gray-800"
             />
             <div className="absolute right-0 top-0 flex items-center">
               {punches.length > 0 && (

@@ -17,7 +17,7 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
     const getUserHistory = async () => {
       try {
         const response = await axios.get(`${API_URL}/users/history`);
-        // console.log(response.data.data);
+        console.log(response.data.data);
         setUserHistory(response.data.data);
       } catch (error) {
         console.log(error);
@@ -54,19 +54,20 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
           <ul className="space-y-2">
             {/* Replace with dynamic content */}
             {/* Add with NavLink */}
-            {userHistory.map((history) => (
-              <Link
-                to={`/setups/${history.history.setup._id}`}
-                key={history.history._id}
-              >
-                <li
+            {userHistory &&
+              userHistory.map((history) => (
+                <Link
+                  to={`/setups/${history.history.setup._id}`}
                   key={history.history._id}
-                  className="bg-gray-800 text-gray-200 shadow rounded p-2 mb-2 cursor-pointer hover:bg-gray-700 transition-all duration-300 ease-in-out"
                 >
-                  {history.history.setup.setup.slice(0, 25)}...
-                </li>
-              </Link>
-            ))}
+                  <li
+                    key={history.history._id}
+                    className="bg-gray-800 text-gray-200 shadow rounded p-2 mb-2 cursor-pointer hover:bg-gray-700 transition-all duration-300 ease-in-out"
+                  >
+                    {history.history.setup.setup.slice(0, 25)}...
+                  </li>
+                </Link>
+              ))}
           </ul>
         </div>
 
