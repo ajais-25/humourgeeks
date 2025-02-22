@@ -37,6 +37,7 @@ const Setup = () => {
         ]);
 
         setSetup(setupResponse.data.data);
+        console.log(punchesResponse.data.data);
         setPunches(punchesResponse.data.data);
       } catch (error) {
         console.error("Error fetching data", error);
@@ -78,6 +79,17 @@ const Setup = () => {
     }
   };
 
+  const handleSolutionChange = (punch) => {
+    console.log(punch);
+    setPunchline(punch.punchline);
+    setHumors(
+      HUMOR_TYPES.map((h) => ({
+        ...h,
+        rating: punch.humorRating[h.title.toLowerCase()] || 0,
+      }))
+    );
+  };
+
   return (
     <div className="flex w-full h-screen bg-[#F3D723] md:pl-72 pl-8">
       <div className="w-[80%]">
@@ -111,13 +123,22 @@ const Setup = () => {
             />
             <div className="absolute right-0 top-0 flex items-center">
               {punches.length > 0 && (
-                <select className="outline-none flex items-center gap-1 hover:bg-slate-300 text-sm font-semibold text-slate-500 bg-slate-200 rounded-full cursor-pointer py-1.5 px-1 mr-1 mt-1">
+                <select
+                  className="outline-none flex items-center gap-1 hover:bg-slate-300 text-sm font-semibold text-slate-500 bg-slate-200 rounded-full cursor-pointer py-1.5 px-1 mr-1 mt-1"
+                  onChange={(e) =>
+                    handleSolutionChange(punches[e.target.selectedIndex - 1])
+                  }
+                >
                   <option value="" disabled selected>
                     Previous solution
                   </option>
                   {punches.map((punch, index) => (
-                    <option key={punch._id} value={punch.punchline}>
-                      Solution {index + 1}
+                    <option
+                      key={punch._id}
+                      value={`Solution ${index + 1}`}
+                      className="cursor-pointer"
+                    >
+                      {index + 1}: {punch.punchline.slice(0, 10)}...
                     </option>
                   ))}
                 </select>
