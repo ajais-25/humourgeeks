@@ -24,8 +24,8 @@ const SetupList = () => {
             ","
           )}&search=${searchQuery}&page=${page}`
         );
-        setSetups(response.data.data.setups);
-        setTotal(response.data.data.total);
+        setSetups(response.data.data?.setups);
+        setTotal(response.data.data?.total);
         // console.log(response.data.data);
       } catch (error) {
         console.error(error);
