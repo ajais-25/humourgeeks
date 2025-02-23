@@ -73,7 +73,7 @@ const Layout = ({ children }) => {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <div className="w-screen flex">
+    <div className="">
       {location.pathname !== "/" &&
         location.pathname !== "/login" &&
         location.pathname !== "/signup" && (

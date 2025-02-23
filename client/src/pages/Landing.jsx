@@ -3,7 +3,7 @@ import Navbar from "../components/Landing/Navbar";
 import Preview from "../components/Landing/Preview";
 import Preview2 from "../components/Landing/Preview2";
 
-export default Landing = () => {
+const Landing = () => {
   return (
     <>
       <Navbar />
@@ -13,3 +13,5 @@ export default Landing = () => {
     </>
   );
 };
+
+export default Landing;
