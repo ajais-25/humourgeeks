@@ -13,7 +13,6 @@ app.use(
     })
 );
 
-// app.use(express.json({ limit: "16kb" })); // might have to change this later
 app.use(express.urlencoded({ extended: true, limit: "16kb" }));
 app.use(express.static("public"));
 app.use(cookieParser());
@@ -23,6 +22,7 @@ import userRouter from "./routes/user.routes.js";
 import tagRouter from "./routes/tag.routes.js";
 import setupRouter from "./routes/setup.routes.js";
 import punchlineRouter from "./routes/punchline.routes.js";
+import topPunchesRouter from "./routes/topPunches.routes.js";
 import webhookRouter from "./routes/webhook.routes.js";
 
 // routes declaration
@@ -30,6 +30,7 @@ app.use("/api/v1/users", userRouter);
 app.use("/api/v1/tags", tagRouter);
 app.use("/api/v1/setups", setupRouter);
 app.use("/api/v1/punchline", punchlineRouter);
+app.use("/api/v1/top-punches", topPunchesRouter);
 app.use("/api/v1/webhook", webhookRouter);
 
 export { app };

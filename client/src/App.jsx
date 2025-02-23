@@ -9,6 +9,7 @@ import Sidebar from "./components/Sidebar";
 import Setup from "./pages/Setup";
 import Landing from "./pages/Landing";
 import SetupList from "./pages/SetupList";
+import TopPunches from "./pages/TopPunches";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import { SignedIn, SignedOut } from "@clerk/clerk-react";
@@ -41,6 +42,19 @@ const App = () => {
               <>
                 <SignedIn>
                   <Setup />
+                </SignedIn>
+                <SignedOut>
+                  <Navigate to="/login" />
+                </SignedOut>
+              </>
+            }
+          />
+          <Route
+            path="/setups/:id/top-punches"
+            element={
+              <>
+                <SignedIn>
+                  <TopPunches />
                 </SignedIn>
                 <SignedOut>
                   <Navigate to="/login" />

@@ -6,11 +6,11 @@ import { SendIcon } from "../assets/SendIcon";
 import { PlusIcon } from "../assets/PlusIcon";
 import { SetupTag } from "../components/SetupTag";
 import TitleEmoji from "../components/TitleEmoji";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import { API_URL } from "../apiUrl";
 
-const HUMOR_TYPES = [
+export const HUMOR_TYPES = [
   { title: "Dark", color: "bg-red-500", emoji: "😈" },
   { title: "Pun", color: "bg-green-500", emoji: "😂" },
   { title: "Sarcasm", color: "bg-yellow-500", emoji: "👀" },
@@ -22,10 +22,12 @@ const Setup = () => {
   const [punches, setPunches] = useState([]);
   const [punchline, setPunchline] = useState("");
   const [result, setResult] = useState(null);
+  const navigate = useNavigate();
   const [humors, setHumors] = useState(
     HUMOR_TYPES.map((h) => ({ ...h, rating: 0 }))
   );
-  const [loading, setLoading] = useState(false); // Loader state
+  const [loading, setLoading] = useState(false);
+  const [overallRating, setOverallRating] = useState(0);
   const { id } = useParams();
 
   useEffect(() => {
@@ -37,7 +39,6 @@ const Setup = () => {
         ]);
 
         setSetup(setupResponse.data.data);
-        console.log(punchesResponse.data.data);
         setPunches(punchesResponse.data.data);
       } catch (error) {
         console.error("Error fetching data", error);
@@ -48,14 +49,14 @@ const Setup = () => {
   }, [id]);
 
   function addNew() {
-    setHumors(humors.map((h) => ({ ...h, rating: 0 }))); // Correct way to update state
+    setHumors(humors.map((h) => ({ ...h, rating: 0 })));
     setPunchline("");
   }
 
   const addPunch = async () => {
     if (!punchline) return;
 
-    setLoading(true); // Disable button and show loader
+    setLoading(true);
 
     try {
       const response = await axios.patch(`${API_URL}/punchline/${id}`, {
@@ -66,6 +67,7 @@ const Setup = () => {
       setPunches((prev) => [...prev, newPunch]);
 
       const humorRating = newPunch.humorRating || {};
+      setOverallRating(humorRating.overallRating || null);
       setHumors(
         HUMOR_TYPES.map((h) => ({
           ...h,
@@ -73,21 +75,42 @@ const Setup = () => {
         }))
       );
     } catch (error) {
+      alert("Punchline not funny enough");
       console.error("Error adding punchline", error);
     } finally {
-      setLoading(false); // Re-enable button after request completes
+      setLoading(false);
     }
   };
 
-  const handleSolutionChange = (punch) => {
-    console.log(punch);
-    setPunchline(punch.punchline);
-    setHumors(
-      HUMOR_TYPES.map((h) => ({
-        ...h,
-        rating: punch.humorRating[h.title.toLowerCase()] || 0,
-      }))
-    );
+  const addPost = async () => {
+    if (!punchline || !humors) return;
+
+    console.log(humors);
+
+    try {
+      const response = await axios.post(`${API_URL}/top-punches/${id}`, {
+        punchline,
+        humourRating: humors,
+      });
+      console.log(response.data.data);
+      alert("Post added successfully");
+    } catch (error) {
+      console.error("Error adding post", error);
+    }
+  };
+
+  const handleSolutionChange = (event) => {
+    const selectedIndex = event.target.selectedIndex - 1;
+    if (selectedIndex >= 0) {
+      const selectedPunch = punches[selectedIndex];
+      setPunchline(selectedPunch.punchline);
+      setHumors(
+        HUMOR_TYPES.map((h) => ({
+          ...h,
+          rating: selectedPunch.humorRating[h.title.toLowerCase()] || 0,
+        }))
+      );
+    }
   };
 
   return (
@@ -122,27 +145,30 @@ const Setup = () => {
               className="w-full h-[80%] border-t-1 px-2 mt-1 outline-none text-sm font-medium text-gray-800"
             />
             <div className="absolute right-0 top-0 flex items-center">
+              {punchline && (
+                <div
+                  onClick={addPost}
+                  className="flex items-center gap-1 hover:bg-slate-300 text-xs font-semibold text-slate-500 bg-slate-200 rounded-full cursor-pointer py-2 px-4 mr-1 mt-1"
+                >
+                  Post
+                </div>
+              )}
               {punches.length > 0 && (
                 <select
                   className="outline-none flex items-center gap-1 hover:bg-slate-300 text-sm font-semibold text-slate-500 bg-slate-200 rounded-full cursor-pointer py-1.5 px-1 mr-1 mt-1"
-                  onChange={(e) =>
-                    handleSolutionChange(punches[e.target.selectedIndex - 1])
-                  }
+                  onChange={handleSolutionChange}
                 >
                   <option value="" disabled selected>
                     Previous solution
                   </option>
                   {punches.map((punch, index) => (
-                    <option
-                      key={punch._id}
-                      value={`Solution ${index + 1}`}
-                      className="cursor-pointer"
-                    >
+                    <option key={punch._id} value={index}>
                       {index + 1}: {punch.punchline.slice(0, 10)}...
                     </option>
                   ))}
                 </select>
               )}
+
               <div
                 onClick={addNew}
                 className="flex items-center gap-1 hover:bg-slate-300 text-xs font-semibold text-slate-500 bg-slate-200 rounded-full cursor-pointer py-1 px-2 mr-1 mt-1"
@@ -172,7 +198,20 @@ const Setup = () => {
             <Humor key={index} {...humor} />
           ))}
         </div>
-        <SecondaryCard>Humor Rating </SecondaryCard>
+        <Card color={"#F3D723"}>
+          <div className="flex w-full justify-between">
+            Overall <span>{overallRating}</span>
+          </div>
+        </Card>
+        <SecondaryCard>
+          <div
+            onClick={() => {
+              navigate(`/setups/${id}/top-punches`);
+            }}
+          >
+            Top Punches{" "}
+          </div>
+        </SecondaryCard>
       </div>
     </div>
   );

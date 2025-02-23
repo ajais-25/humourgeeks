@@ -30,7 +30,19 @@ const addPunch = async (req, res) => {
     const wholesome = response.Wholesome;
     const dark = response.Dark_Humor;
     const pun = response.Pun;
-    const overallRating = response.Overall_Humor_Percentage;
+
+    let count = 0;
+    if (dark > 0) count++;
+    if (pun > 0) count++;
+    if (sarcasm > 0) count++;
+    if (wholesome > 0) count++;
+    if (count === 0) count = 1;
+
+    const overallRating = Math.ceil((dark + wholesome + sarcasm + pun) / count);
+
+    if (overallRating === 0) {
+        return res.status(200).json({ message: "Punchline not funny enough" });
+    }
 
     const humorRating = {
         sarcasm,
