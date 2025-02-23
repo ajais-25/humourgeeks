@@ -96,11 +96,12 @@ const SetupList = () => {
               onChange={(e) => handleTagsFilter(e.target.value)}
             >
               <option value="">Tags</option>
-              {tags.map((tag) => (
-                <option key={tag._id} value={tag._id}>
-                  {tag.name}
-                </option>
-              ))}
+              {tags &&
+                tags.map((tag) => (
+                  <option key={tag._id} value={tag._id}>
+                    {tag.name}
+                  </option>
+                ))}
             </select>
           </div>
         </div>
@@ -114,35 +115,38 @@ const SetupList = () => {
             </tr>
           </thead>
           <tbody>
-            {setups.map((item, index) => (
-              <tr key={item._id} className="border-b">
-                <td className="p-2 w-20 text-center">
-                  {(page - 1) * itemsPerPage + index + 1}
-                </td>
-                <td className="p-2 w-20 text-center">
-                  <span
-                    className={`inline-block w-3 h-3 rounded-full mr-2 ${
-                      item.status === "solved" ? "bg-green-500" : "bg-gray-400"
-                    }`}
-                  ></span>
-                </td>
-                <td className="p-2 hover:text-pink-700">
-                  <Link to={`/setups/${item._id}`} key={item._id}>
-                    {item.setup}
-                  </Link>
-                </td>
-                <td className="p-2 w-50 text-left">
-                  {item.tags.map((tag) => (
+            {setups &&
+              setups.map((item, index) => (
+                <tr key={item._id} className="border-b">
+                  <td className="p-2 w-20 text-center">
+                    {(page - 1) * itemsPerPage + index + 1}
+                  </td>
+                  <td className="p-2 w-20 text-center">
                     <span
-                      key={tag._id}
-                      className="bg-gray-300 text-black text-xs px-2 py-1 rounded-full mr-1"
-                    >
-                      {tag.name}
-                    </span>
-                  ))}
-                </td>
-              </tr>
-            ))}
+                      className={`inline-block w-3 h-3 rounded-full mr-2 ${
+                        item.status === "solved"
+                          ? "bg-green-500"
+                          : "bg-gray-400"
+                      }`}
+                    ></span>
+                  </td>
+                  <td className="p-2 hover:text-pink-700">
+                    <Link to={`/setups/${item._id}`} key={item._id}>
+                      {item.setup}
+                    </Link>
+                  </td>
+                  <td className="p-2 w-50 text-left">
+                    {item.tags.map((tag) => (
+                      <span
+                        key={tag._id}
+                        className="bg-gray-300 text-black text-xs px-2 py-1 rounded-full mr-1"
+                      >
+                        {tag.name}
+                      </span>
+                    ))}
+                  </td>
+                </tr>
+              ))}
           </tbody>
         </table>
         <div className="flex justify-between items-center mt-4">
