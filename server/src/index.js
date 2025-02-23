@@ -2,6 +2,7 @@ import dotenv from "dotenv";
 dotenv.config({ path: "./.env" });
 import connectDB from "./db/connect.js";
 import { app } from "./app.js";
+import axios from "axios";
 
 // for render
 const url = `${process.env.RENDER_URL}`;
