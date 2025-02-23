@@ -6,6 +6,7 @@ import { SendIcon } from "../assets/SendIcon";
 import { PlusIcon } from "../assets/PlusIcon";
 import { SetupTag } from "../components/SetupTag";
 import TitleEmoji from "../components/TitleEmoji";
+import { toast, ToastContainer } from "react-toastify";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import { API_URL } from "../apiUrl";
@@ -26,6 +27,20 @@ const Setup = () => {
   const [humors, setHumors] = useState(
     HUMOR_TYPES.map((h) => ({ ...h, rating: 0 }))
   );
+  const notify = () =>
+    toast(
+      "Congrats! You just invented a new language—too bad even Google Translate gave up! 😂",
+      {
+        position: "top-center",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        theme: "dark",
+        style: { background: "#1a1a1a", color: "#FFD700", width: "90%" }, // Dark background and yellow text
+      }
+    );
   const [loading, setLoading] = useState(false);
   const [overallRating, setOverallRating] = useState(0);
   const { id } = useParams();
@@ -75,7 +90,8 @@ const Setup = () => {
         }))
       );
     } catch (error) {
-      alert("Punchline not funny enough");
+      notify();
+      // alert("Punchline not funny enough");
       console.error("Error adding punchline", error);
     } finally {
       setLoading(false);
@@ -93,7 +109,15 @@ const Setup = () => {
         humourRating: humors,
       });
       console.log(response.data.data);
-      alert("Post added successfully");
+      toast.success("Punchline added in the Top Punches section! 🎉", {
+        position: "top-center",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        theme: "dark",
+      });
     } catch (error) {
       console.error("Error adding post", error);
     }
@@ -214,6 +238,7 @@ const Setup = () => {
             Top Punches{" "}
           </div>
         </SecondaryCard>
+        <ToastContainer />
       </div>
     </div>
   );
