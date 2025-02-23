@@ -110,6 +110,8 @@ const Setup = () => {
           rating: selectedPunch.humorRating[h.title.toLowerCase()] || 0,
         }))
       );
+      setOverallRating(selectedPunch.humorRating.overallRating || 0);
+      console.log(selectedPunch.humorRating.overallRating);
     }
   };
 
